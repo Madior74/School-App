@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:school_app/screens/home_screen.dart';
-import 'package:school_app/screens/login_screen.dart';
+import 'package:school_app/screens/splash_screen/splash_creen.dart';
 import 'package:school_app/theme/app_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       themeMode: ThemeMode.light,
-      home: userData != null ? HomeScreen(userData: userData!) : LoginScreen(),
+      home: userData != null ? HomeScreen(userData: userData!) : SplashScreen(),
       debugShowCheckedModeBanner: false,
     );
   }

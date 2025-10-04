@@ -35,7 +35,7 @@ class AuthService {
       body: json.encode({'email': email, 'password': password}),
     );
 
-    print(response.body);
+    print('Login response status: ${response.statusCode}');
 
     if (response.statusCode == 200 || response.statusCode == 201) {
       final data = json.decode(utf8.decode(response.bodyBytes));
@@ -86,11 +86,23 @@ class AuthService {
     }
   }
 
+  // Future<void> logout() async {
+  //   final prefs = await SharedPreferences.getInstance();
+  //   await prefs.remove(_accessTokenKey);
+  //   await prefs.remove(_refreshTokenKey);
+  //   await prefs.remove('role');
+  // }
   Future<void> logout() async {
     final prefs = await SharedPreferences.getInstance();
-    await prefs.remove(_accessTokenKey);
-    await prefs.remove(_refreshTokenKey);
-    await prefs.remove('role');
+    await prefs.remove('user');
+    bool removedAccess = await prefs.remove(_accessTokenKey);
+    bool removedRefresh = await prefs.remove(_refreshTokenKey);
+    bool removedRole = await prefs.remove('role');
+
+    print('User removed: ${prefs.getString('user') == null}');  
+    print('Access token removed: $removedAccess');
+    print('Refresh token removed: $removedRefresh');
+    print('Role removed: $removedRole');
   }
 
   Future<String?> getToken() async {

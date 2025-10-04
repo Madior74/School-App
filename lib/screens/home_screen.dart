@@ -11,12 +11,15 @@ import 'package:school_app/screens/liste_evaluation.dart';
 import 'package:school_app/screens/liste_notes.dart';
 import 'package:school_app/screens/liste_salle_libres.dart';
 import 'package:school_app/screens/liste_seance.dart';
+import 'package:school_app/screens/login_screen.dart';
 import 'package:school_app/screens/profil_etudiant_page.dart';
 import 'package:school_app/services/all_services.dart';
+import 'package:school_app/services/auth_service.dart';
 import 'package:school_app/widgets/drawer.dart';
 import 'package:school_app/widgets/home_widgets/stat_card.dart';
 import 'package:school_app/widgets/home_widgets/feature_card.dart';
 import 'package:school_app/theme/color.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 class HomeScreen extends StatefulWidget {
   final Map<String, dynamic> userData;
@@ -181,7 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
         ],
       ),
-      // drawer: MyDrawer(userData: widget.userData),
+      drawer: MyDrawer(userData: widget.userData),
       body: RefreshIndicator(
         onRefresh: () => _refresh(showFeedback: false),
         color: myblueColor,
@@ -427,6 +430,29 @@ class _HomeScreenState extends State<HomeScreen> {
                 );
               },
             ),
+            FeatureCard(
+              title: 'Déconnexion',
+              icon: Icons.logout,
+              color: physicsColor,
+              onTap: () async {
+                var connectivityResult = await (Connectivity()
+                    .checkConnectivity());
+                if (connectivityResult == ConnectivityResult.none) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Pas de connexion réseau")),
+                  );
+                  return;
+                }
+
+                await AuthService().logout();
+                if (!mounted) return;
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(builder: (context) => LoginScreen()),
+                  (route) => false,
+                );
+              },
+            ),
           ],
         ),
       ],
@@ -445,9 +471,5 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _navigateToMessages() {
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Fonctionnalité en cours de développement')),
-    );
-  }
+  //Deconnexion
 }

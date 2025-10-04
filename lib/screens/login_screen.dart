@@ -73,36 +73,65 @@ class _LoginScreenState extends State<LoginScreen> {
       body: Center(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.symmetric(
+              horizontal: 24.0,
+              vertical: 32.0,
+            ),
             child: Form(
               key: _formKey,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
+                  SizedBox(height: 10),
+                  Image.asset("assets/images/ucao.png", height: 120),
+                  SizedBox(height: 20),
                   Text(
                     "Bienvenue",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 60),
-                  ),
-                  Text("Connectez-vous pour continuer."),
-                  SizedBox(height: 25),
-                  //Champ email
-                  TextFormField(
-                    controller: _emailController,
-                    decoration: InputDecoration(
-                      prefixIcon: Icon(Icons.email),
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-          
-                      labelText: "Email",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 36,
+                      color: myblueColor,
+                      letterSpacing: 1.2,
                     ),
                   ),
-                  SizedBox(height: 25),
-          
+                  SizedBox(height: 8),
+                  Text(
+                    "Connectez-vous pour continuer",
+                    style: TextStyle(fontSize: 16, color: Colors.grey[700]),
+                  ),
+                  SizedBox(height: 32),
+                  // Champ email
+                  TextFormField(
+                    controller: _emailController,
+                    keyboardType: TextInputType.emailAddress,
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.email, color: myblueColor),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      labelText: "Email",
+                      labelStyle: TextStyle(color: myblueColor),
+                      filled: true,
+                      fillColor: Colors.grey[100],
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Veuillez entrer votre email';
+                      }
+                      if (!RegExp(
+                        r'^[^@\s]+@[^@\s]+\.[^@\s]+',
+                      ).hasMatch(value)) {
+                        return 'Veuillez entrer un email valide';
+                      }
+                      return null;
+                    },
+                  ),
+                  SizedBox(height: 20),
+                  // Champ mot de passe
                   TextFormField(
                     controller: _passwordController,
-                    obscureText: isVisible,
-          
+                    obscureText: !isVisible,
                     decoration: InputDecoration(
                       suffixIcon: IconButton(
                         onPressed: () {
@@ -111,38 +140,58 @@ class _LoginScreenState extends State<LoginScreen> {
                           });
                         },
                         icon: Icon(
-                          isVisible ? Icons.visibility_off : Icons.visibility,
+                          isVisible ? Icons.visibility : Icons.visibility_off,
+                          color: myblueColor,
                         ),
                       ),
-                      prefixIcon: Icon(Icons.lock),
+                      prefixIcon: Icon(Icons.lock, color: myblueColor),
                       border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(16),
                       ),
-          
-                      labelText: "Mot de Passe",
+                      labelText: "Mot de passe",
+                      labelStyle: TextStyle(color: myblueColor),
+                      filled: true,
+                      fillColor: Colors.grey[100],
                     ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'Veuillez entrer votre mot de passe';
+                      }
+                      if (value.length < 6) {
+                        return 'Le mot de passe doit contenir au moins 6 caractères';
+                      }
+                      return null;
+                    },
                   ),
-          
-                  SizedBox(height: 25),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadiusGeometry.circular(10),
-                          ),
-          
-                          backgroundColor: myblueColor,
-                          foregroundColor: Colors.white,
+                  SizedBox(height: 32),
+                  SizedBox(
+                    width: double.infinity,
+                    height: 50,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
                         ),
-          
-                        onPressed: () => _isLoading ? null : _login(),
-                        child: _isLoading
-                            ? Center(child: CircularProgressIndicator())
-                            : Text("Connexion"),
+                        backgroundColor: myblueColor,
+                        foregroundColor: Colors.white,
+                        elevation: 2,
+                        textStyle: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ],
+                      onPressed: _isLoading ? null : _login,
+                      child: _isLoading
+                          ? SizedBox(
+                              width: 24,
+                              height: 24,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                                strokeWidth: 2.5,
+                              ),
+                            )
+                          : Text("Connexion"),
+                    ),
                   ),
                 ],
               ),
